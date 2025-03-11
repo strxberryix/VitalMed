@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Inventario Médico</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="login-container">
+        <h1>Iniciar Sesión</h1>
+        <select id="role">
+            <option value="doctor">Doctor</option>
+            <option value="alumno">Alumno</option>
+            <option value="autoridad">Autoridad</option>
+        </select>
+        <button onclick="login()">Ingresar</button>
+    </div>
+
+    <div id="app-container" class="hidden">
+        <h1>Inventario Médico</h1>
+        <h3 id="userRole"></h3>
+
+        <!-- Panel del Doctor -->
+        <div id="doctorPanel" class="hidden">
+            <form id="medForm">
+                <input type="text" id="medName" placeholder="Nombre del medicamento" required>
+                <input type="number" id="medQuantity" placeholder="Cantidad" required>
+                <input type="number" id="medMinStock" placeholder="Stock mínimo" required>
+                <button type="submit">Agregar Medicamento</button>
+            </form>
+            <button onclick="generateReport()">Generar Reporte</button>
+        </div>
+
+        <!-- Escaneo de QR -->
+        <div id="qrPanel">
+            <h2>Escaneo de QR</h2>
+            <video id="qr-video"></video>
+            <button onclick="startQRScanner()">Escanear Código QR</button>
+        </div>
+
+        <!-- Inventario -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Medicamento</th>
+                    <th>Cantidad</th>
+                    <th>Stock Mínimo</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody id="medTableBody"></tbody>
+        </table>
+
+        <div id="alertContainer"></div>
+
+        <!-- Recomendaciones -->
+        <div id="recommendations">
+            <h2>Recomendaciones</h2>
+            <textarea id="recText" placeholder="Escribe tu recomendación..."></textarea>
+            <button onclick="addRecommendation()">Enviar</button>
+            <ul id="recList"></ul>
+        </div>
+
+        <button onclick="logout()">Cerrar Sesión</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

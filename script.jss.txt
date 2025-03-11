@@ -1,0 +1,85 @@
+document.addEventListener("DOMContentLoaded", function() {
+    const loginContainer = document.getElementById("login-container");
+    const appContainer = document.getElementById("app-container");
+    const userRole = document.getElementById("userRole");
+    const doctorPanel = document.getElementById("doctorPanel");
+    const medTableBody = document.getElementById("medTableBody");
+    const alertContainer = document.getElementById("alertContainer");
+    const recList = document.getElementById("recList");
+
+    let meds = JSON.parse(localStorage.getItem("meds")) || [];
+    let recommendations = JSON.parse(localStorage.getItem("recommendations")) || [];
+    let currentUserRole = "";
+
+    function renderTable() {
+        medTableBody.innerHTML = "";
+        alertContainer.innerHTML = "";
+
+        meds.forEach((med, index) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${med.name}</td>
+                <td>${med.quantity}</td>
+                <td>${med.minStock}</td>
+                <td>
+                    ${currentUserRole === "doctor" ? `<button onclick="removeMed(${index})">Eliminar</button>` : ""}
+                </td>
+            `;
+            medTableBody.appendChild(row);
+
+            if (med.quantity <= med.minStock) {
+                alertContainer.innerHTML += `<p>⚠️ Alerta: ${med.name} está por debajo del stock mínimo.</p>`;
+            }
+        });
+
+        localStorage.setItem("meds", JSON.stringify(meds));
+    }
+
+    window.login = function() {
+        currentUserRole = document.getElementById("role").value;
+        userRole.textContent = `Bienvenido, ${currentUserRole.charAt(0).toUpperCase() + currentUserRole.slice(1)}`;
+
+        loginContainer.classList.add("hidden");
+        appContainer.classList.remove("hidden");
+
+        if (currentUserRole === "doctor") {
+            doctorPanel.classList.remove("hidden");
+        } else {
+            doctorPanel.classList.add("hidden");
+        }
+
+        renderTable();
+        renderRecommendations();
+    };
+
+    window.logout = function() {
+        loginContainer.classList.remove("hidden");
+        appContainer.classList.add("hidden");
+    };
+
+    window.addRecommendation = function() {
+        const recText = document.getElementById("recText").value;
+        if (recText) {
+            recommendations.push(recText);
+            localStorage.setItem("recommendations", JSON.stringify(recommendations));
+            renderRecommendations();
+            document.getElementById("recText").value = "";
+        }
+    };
+
+    function renderRecommendations() {
+        recList.innerHTML = "";
+        recommendations.forEach(rec => {
+            const li = document.createElement("li");
+            li.textContent = rec;
+            recList.appendChild(li);
+        });
+    }
+
+    window.generateReport = function() {
+        alert("📄 Reporte generado (simulación).");
+    };
+
+    renderTable();
+    renderRecommendations();
+});
